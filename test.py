@@ -25,3 +25,9 @@ model.summary()
 
 model.compile(optimizer='adam', loss='mse')
 model.fit(x, y, epochs=100, batch_size=1
+
+x_input = array([6, 7, 8])
+x_input = x_input.reshape((1,3,1))
+
+yhat = model.predict(x_input)
+print(yhat)
