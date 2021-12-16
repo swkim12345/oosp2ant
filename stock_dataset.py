@@ -34,7 +34,7 @@ class stock_dataset():
 		cur = conn.cursor()
 
 		#SQL에 쿼리를 날려 Kospi 내의 모든 것을 받아옴
-		sql = "select * from kospi"
+		sql = "select * from kospi order by date desc"
 		cur.execute(sql)
 		rows = cur.fetchall()
 
@@ -50,7 +50,7 @@ class stock_dataset():
 		conn = sqlite3.connect(self.filename)
 		cur = conn.cursor()
 
-		sql = "select * from nasdaq"
+		sql = "select * from nasdaq order by date desc"
 
 		cur.execute(sql)
 		rows = cur.fetchall()
@@ -69,7 +69,7 @@ class stock_dataset():
 		conn = sqlite3.connect(self.filename)
 		cur = conn.cursor()
 
-		sql = "select * from sp"
+		sql = "select * from sp order by date desc"
 
 		cur.execute(sql)
 		rows = cur.fetchall()
