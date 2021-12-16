@@ -1,5 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
+import numpy as np
 
 
 
@@ -11,7 +12,7 @@ def load_dataset():
 	pass
 #2. 모델 구성하는 함수
 def make_model():
-	
+
 	pass
 #3. 학습시키는 함수
 def learn_model():
