@@ -30,9 +30,10 @@ class Model():
 
         self.lstm_ae = keras.Model(inputs = [input_1, input_2], outputs = [output])
         self.lstm_ae.compile(optimizer='adam', loss='mse')
-        self.lstm_encoder.summary()
-        self.lstm_decoder.summary()
-        self.lstm_ae.summary()
+        #일단 주석처리함.
+        # self.lstm_encoder.summary()
+        # self.lstm_decoder.summary()
+        # self.lstm_ae.summary()
 
     def fit_model(self, X_train, X_valid):
         history = self.lstm_ae.fit(X_train, X_train, epochs=50, validation_data=(X_valid, X_valid))

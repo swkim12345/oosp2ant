@@ -25,6 +25,7 @@ class StockAgent():
         """
 
         coin = random.random()
+        #input_1 : asset input_2 : market_feature
         input_1 = state[2]
         input_2 = state[1]
 

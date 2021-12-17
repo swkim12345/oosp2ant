@@ -18,11 +18,10 @@ t, market_feature, asset, done = state
 s = [t, market_feature, asset]
 
 
-
 while not done:
     a = agent.select_action(s)
 
-    print(a)
+    #print(a)
 
     if done:
         break

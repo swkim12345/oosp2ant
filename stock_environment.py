@@ -30,9 +30,13 @@ class StockWorld():
         self.time = time
         timediff = self.time - self.start
 
-        self.market_feature = np.array([])  # m, n 행렬로 표현한 시장지표
-        for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
-            self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], float), axis=0)
+        self.market_feature = np.array(self.data[timediff.days-29][1:])  # m, n 행렬로 표현한 시장지표
+
+        for feature in range(timediff.days-28, timediff.days+1):  # 시장지표 최신화
+            print(self.market_feature.shape)
+            self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], float)).reshape(-1, 4)
+
+        print(self.market_feature)
 
         self.asset = np.array([1000000000, 0])  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
 
@@ -89,7 +93,7 @@ class StockWorld():
         done = self.is_done()
         return self.time, np_market_feature, np_asset , done
         # 나머지 state 값들도 초기화 해야 됨
-        
+
     def current_state(self):
         """
         현재 상태를 리턴한다.
@@ -100,6 +104,6 @@ class StockWorld():
         return self.time, np_market_feature, np_asset, done
 
 
-
-
+current_time = datetime.date(2018, 1, 1)
+stock = StockWorld(current_time)
 
