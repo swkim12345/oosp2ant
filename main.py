@@ -31,6 +31,7 @@ while not done:
     if done:
         break
 
+    #train
     print(s, a, r)
 
 

@@ -3,6 +3,7 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM, RepeatVector, TimeDistributed, Input, Concatenate
 import numpy as np
 import tensorflow as tf
+from stock_environment import StockWorld
 
 class Model():
 
@@ -21,8 +22,8 @@ class Model():
 
         self.lstm_decoder = Sequential([
             RepeatVector(32, input_shape=[32]),
-            LSTM(units=20, return_sequences=True),
-            LSTM(units=128, return_sequences=True),
+            Dense(units = 20),
+            Dense(units = 128),
             TimeDistributed(Dense(3, activation="sigmoid"))
         ])
 
@@ -35,7 +36,6 @@ class Model():
         self.lstm_ae.summary()
 
     def get_dataset(self, current_time):
-
         dataset = StockWorld(current_time)
         current_state = dataset.current_state()
         current_state = current_state[1]
