@@ -20,14 +20,7 @@ class StockAgent():
 
         self.eps = 0.9
 
-        self.dataset = stock_dataset("data.db")
-        set = self.dataset.tech_indi()
-        set = np.array(set[1:][60:]).reshape(-1, 30, 4)
-        print(type(set))
-        print(set[0])
-        print(set.shape)
 
-        self.q.fit_model(set[:100], set[100:])
 
     def select_action(self, state):
         """
@@ -47,16 +40,16 @@ class StockAgent():
         input_2 = input_2.reshape(1, 30, 4)
         input_1 = np.asarray_chkfinite(input_1)
         input_2 = np.asarray_chkfinite(input_2)
-        print("output")
-        print(input_2, input_1)
-        print(input_1.shape)
-        print(input_2.shape)
-        print(type(input_1))
-        print(type(input_2))
-        print(type(input_1[0]))
-        print(type(input_2[0]))
-        print(type(input_2[0][0]))
-        print(type(input_2[0]))
+        # print("output")
+        # print(input_2, input_1)
+        # print(input_1.shape)
+        # print(input_2.shape)
+        # print(type(input_1))
+        # print(type(input_2))
+        # print(type(input_1[0]))
+        # print(type(input_2[0]))
+        # print(type(input_2[0][0]))
+        # print(type(input_2[0]))
 
 
         if coin < self.eps:  # epsilon - greedy
