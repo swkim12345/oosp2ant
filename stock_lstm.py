@@ -1,6 +1,7 @@
 import keras.layers
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, RepeatVector, TimeDistributed, Input, Concatenate
+from stock_environment import StockWorld
 import numpy as np
 import tensorflow as tf
 
@@ -13,20 +14,20 @@ class Model():
 
         self.lstm_encoder = Sequential([
             LSTM(input_shape=[30, 4], units=128, activation='relu', return_sequences=True),
-            LSTM(units=20)
+            LSTM(units=30)
         ])  # 케라스 순차 모델 사용
 
         self.lstm_decoder = Sequential([
-            RepeatVector(20, input_shape=[20]),
-            LSTM(units=20, return_sequences=True),
+            RepeatVector(30, input_shape=[30]),
+            LSTM(units=30, return_sequences=True),
             LSTM(units=128, return_sequences=True),
             TimeDistributed(Dense(5, activation="sigmoid"))
         ])
 
         self.lstm_ae = Sequential([self.lstm_encoder, self.lstm_decoder])
         self.lstm_ae.compile(optimizer='adam', loss='mse')
-        self.lstm_encoder.summary()
-        self.lstm_decoder.summary()
+        # self.lstm_encoder.summary()
+        # self.lstm_decoder.summary()
 
     def make_model(self):  # market feature 와, asset 을 받아 q value를 예측
 
@@ -44,7 +45,7 @@ class Model():
         wt_prime_concat_with_enc = keras.layers.Concatenate(axis=1)([wt_prime_inpt, encoder])
 
         hidden1 = Dense(22, activation="relu")(wt_prime_concat_with_enc)
-        hidden2 = Dense(32, activation="relu")(hidden1)
+        hidden2 = Dense(16, activation="relu")(hidden1)
         output = Dense(3)(hidden2)  # output레이어
 
         model = tf.keras.models.Model(inputs=[inputs], outputs=[output])
@@ -66,4 +67,3 @@ class Model():
 
 
 model = Model([1], [1]).make_model()
-print(model)
