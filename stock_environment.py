@@ -33,10 +33,10 @@ class StockWorld():
         self.market_feature = np.array(self.data[timediff.days-29][1:])  # m, n 행렬로 표현한 시장지표
 
         for feature in range(timediff.days-28, timediff.days+1):  # 시장지표 최신화
-            print(self.market_feature.shape)
+         #   print(self.market_feature.shape)
             self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], float)).reshape(-1, 4)
 
-        print(self.market_feature)
+        #print(self.market_feature)
 
         self.asset = np.array([1000000000, 0])  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
 

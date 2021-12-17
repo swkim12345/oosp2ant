@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from stock_lstm import Model
+from stock_dataset import stock_dataset
 import stock_lstm
 
 class StockAgent():
@@ -19,6 +20,15 @@ class StockAgent():
 
         self.eps = 0.9
 
+        self.dataset = stock_dataset("data.db")
+        set = self.dataset.tech_indi()
+        set = np.array(set[1:][60:]).reshape(-1, 30, 4)
+        print(type(set))
+        print(set[0])
+        print(set.shape)
+
+        self.q.fit_model(set[:100], set[100:])
+
     def select_action(self, state):
         """
         epsilon greedy 를 이용하여 action을 정함
@@ -26,18 +36,36 @@ class StockAgent():
 
         coin = random.random()
         #input_1 : asset input_2 : market_feature
-        input_1 = state[2]
-        input_2 = state[1]
-        for i in range(29):
-            input_2 = np.append(input_1, state[2]).reshape(-1, 2)
+        input_1 = np.array(state[2], dtype='float32')
 
+        input_2 = np.array(state[1], dtype='float32')
+        print("input_1")
+        print(input_1)
+        # for i in range(29):
+        #     input_1 = np.append(input_1, state[2]).reshape(-1, 2)
+        input_1 = input_1.reshape(1, 2)
+        input_2 = input_2.reshape(1, 30, 4)
+        input_1 = np.asarray_chkfinite(input_1)
+        input_2 = np.asarray_chkfinite(input_2)
+        print("output")
         print(input_2, input_1)
+        print(input_1.shape)
+        print(input_2.shape)
+        print(type(input_1))
+        print(type(input_2))
+        print(type(input_1[0]))
+        print(type(input_2[0]))
+        print(type(input_2[0][0]))
+        print(type(input_2[0]))
+
 
         if coin < self.eps:  # epsilon - greedy
             random_action = random.randint(-1, 1)
             return random_action
         else:
-            act_values = self.q.lstm_ae.predict([input_1, input_2], verbose=1)
+            # https://stackoverflow.com/questions/65408896/how-to-do-prediction-with-2-inputs
+            # 해결방법
+            act_values = self.q.lstm_ae.predict((input_1, input_2), verbose=1)
             return np.argmax(act_values[0])
             # 높은 q value 를 가지는 action 을 택함.
 
