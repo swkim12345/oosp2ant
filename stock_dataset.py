@@ -116,14 +116,16 @@ stock.init("data.db")
 
 start = datetime.date(2000, 1, 1)
 
-data = list(stock.tech_indi())
+data = stock.tech_indi()
 
-for i in range(len(data)):
-	data[i] = list(data[i])
+list_data = list(data)
 
-for i in range(len(data)):
-	data[i][0] = start
+for i in range(len(list_data)):
+	list_data[i] = list(list_data[i])
+
+for i in range(len(list_data)):
+	list_data[i][0] = start
 	start += datetime.timedelta(days=1)
 
+print(list_data)
 print(data)
-
