@@ -90,7 +90,7 @@ class stock_dataset():
 		conn = sqlite3.connect(self.filename)
 		cur = conn.cursor()
 
-		kospi = "select date, stockper from kospi order by date asc"
+		kospi = "select date, stockper, percent from kospi order by date asc"
 
 		cur.execute(kospi)
 		kospi_rows = np.array(cur.fetchall(), dtype='float32')
