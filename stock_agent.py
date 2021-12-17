@@ -1,6 +1,6 @@
 import random
 import numpy as np
-
+from stock_lstm import Model
 
 class StockAgent():
     def __init__(self):
@@ -26,9 +26,11 @@ class StockAgent():
             random_action = random.randint(-1, 1)
             return random_action
         else:
+            act_values = Model.predict(state)
+            return np.argmax(act_values[0])
             # 높은 q value 를 가지는 action 을 택함.
 
 
 
-        
+
 
