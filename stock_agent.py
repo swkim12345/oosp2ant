@@ -25,12 +25,14 @@ class StockAgent():
         """
 
         coin = random.random()
+        input_1 = np.array(state[2], float)
+        input_2 = np.array(state[1], float)
 
         if coin < self.eps:  # epsilon - greedy
             random_action = random.randint(-1, 1)
             return random_action
         else:
-            act_values = self.q.lstm_ae.predict(state[2], state[1])
+            act_values = self.q.lstm_ae.predict([input_1, input_2], verbose=1)
             return np.argmax(act_values[0])
             # 높은 q value 를 가지는 action 을 택함.
 

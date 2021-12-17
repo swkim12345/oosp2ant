@@ -1,5 +1,6 @@
 import datetime
 from stock_dataset import stock_dataset
+import numpy as np
 
 
 class StockWorld():
@@ -28,7 +29,11 @@ class StockWorld():
 
         self.time = time
         timediff = self.time - self.start
-        self.market_feature = self.data[timediff.days-29:timediff.days+1]  # m, n 행렬로 표현한 시장지표
+
+        self.market_feature = []  # m, n 행렬로 표현한 시장지표
+        for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
+            self.market_feature.append(self.data[feature][1:])
+
         self.asset = [1000000000, 0]  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
 
     def step(self, action):
@@ -41,7 +46,9 @@ class StockWorld():
 
         timediff = self.time - self.start
         kospi_diff = float((self.kospi[timediff.days] - self.kospi[timediff.days - 1]) / self.kospi[timediff.days - 1])
-        self.market_feature = self.data[timediff.days-29:timediff.days+1]  # 시장지표 최신화
+        self.market_feature = []
+        for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
+            self.market_feature.append(self.data[feature][1:])
 
         current_asset = sum(self. asset)
 
@@ -63,7 +70,10 @@ class StockWorld():
 
         done = self.is_done()
 
-        return self.time, self.market_feature, self.asset, done, reward
+        np_market_feature = np.array(self.market_feature, float)
+        np_asset = np.array(self.asset, float)
+
+        return self.time, np_market_feature, np_asset, done, reward
 
     def is_done(self):
         if self.time == self.destination:
@@ -74,12 +84,19 @@ class StockWorld():
     def reset(self, time, destination):
         self.time = time
         self.destination = destination
-        return self.time, self.market_feature, self.asset , self.is_done()
+        np_market_feature = np.array(self.market_feature, float)
+        np_asset = np.array(self.asset, float)
+        done = self.is_done()
+        return self.time, np_market_feature, np_asset , done
         # 나머지 state 값들도 초기화 해야 됨
         
     def current_state(self):
         """
         현재 상태를 리턴한다.
         """
-        return self.time, self.market_feature, self.asset , self.is_done()
+        np_market_feature = np.array(self.market_feature, float)
+        np_asset = np.array(self.asset, float)
+        done = self.is_done()
+        return self.time, np_market_feature, np_asset, done
+
 

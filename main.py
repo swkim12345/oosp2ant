@@ -20,18 +20,11 @@ s = [t, market_feature, asset]
 while not done:
     a = agent.select_action(s)
 
-    t, market_feature, asset, done, r = environment.step(a)
-    s_prime = [t, market_feature, asset]
-    done_mask = 0.0 if done else 1.0
-
-    memory.put([s, a, r, s_prime, done_mask])
-    s = s_prime
-    score += r
+    print(a)
 
     if done:
         break
 
-    print(s, a, r)
 
 
 

@@ -34,15 +34,6 @@ class Model():
         self.lstm_decoder.summary()
         self.lstm_ae.summary()
 
-    def get_dataset(self, current_time):
-
-        dataset = StockWorld(current_time)
-        current_state = dataset.current_state()
-        current_state = current_state[1]
-        state_np = np.delete(np.array(current_state), 0, axis=1)
-        data_np = state_np.astype(np.float32)
-        return data_np
-
     def fit_model(self, X_train, X_valid):
         history = self.lstm_ae.fit(X_train, X_train, epochs=50, validation_data=(X_valid, X_valid))
 
