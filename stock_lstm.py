@@ -1,57 +1,38 @@
 import keras.layers
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, RepeatVector, TimeDistributed, Input, Concatenate
-from stock_environment import StockWorld
 import numpy as np
 import tensorflow as tf
 
-
 class Model():
 
-    def __init__(self, X_train, X_valid):
-        self.X_train = X_train
-        self.X_valid = X_valid
+    def __init__(self):
 
         self.lstm_encoder = Sequential([
             LSTM(input_shape=[30, 4], units=128, activation='relu', return_sequences=True),
             LSTM(units=30)
         ])  # 케라스 순차 모델 사용
 
+        input_1 = keras.layers.Input(shape=[2])
+        input_2 = keras.layers.Input(shape=[30, 4])
+        encoder = self.lstm_encoder(input_2)
+
+        input_1_concat_input_2 = keras.layers.Concatenate(axis=1)([input_1, encoder])
+
         self.lstm_decoder = Sequential([
-            RepeatVector(30, input_shape=[30]),
-            LSTM(units=30, return_sequences=True),
+            RepeatVector(32, input_shape=[32]),
+            LSTM(units=20, return_sequences=True),
             LSTM(units=128, return_sequences=True),
-            TimeDistributed(Dense(5, activation="sigmoid"))
+            TimeDistributed(Dense(3, activation="sigmoid"))
         ])
 
-        self.lstm_ae = Sequential([self.lstm_encoder, self.lstm_decoder])
+        output = self.lstm_decoder(input_1_concat_input_2)
+
+        self.lstm_ae = keras.Model(inputs = [input_1, input_2], outputs = [output])
         self.lstm_ae.compile(optimizer='adam', loss='mse')
-        # self.lstm_encoder.summary()
-        # self.lstm_decoder.summary()
-
-    def make_model(self):  # market feature 와, asset 을 받아 q value를 예측
-
-        wt_prime_inpt = keras.layers.Input(shape=[2])
-        inputs = [wt_prime_inpt]
-        encoders = []
-
-        # 거래할 ETF는 한개이므로
-        inpt = keras.layers.Input(shape=[30, 4])
-        inputs.append(inpt)
-        encoder = self.lstm_encoder(inpt)
-        encoders.append(encoder)
-        print(type(encoder))
-
-        wt_prime_concat_with_enc = keras.layers.Concatenate(axis=1)([wt_prime_inpt, encoder])
-
-        hidden1 = Dense(22, activation="relu")(wt_prime_concat_with_enc)
-        hidden2 = Dense(16, activation="relu")(hidden1)
-        output = Dense(3)(hidden2)  # output레이어
-
-        model = tf.keras.models.Model(inputs=[inputs], outputs=[output])
-        model.summary()
-
-        return model
+        self.lstm_encoder.summary()
+        self.lstm_decoder.summary()
+        self.lstm_ae.summary()
 
     def get_dataset(self, current_time):
 
@@ -62,8 +43,6 @@ class Model():
         data_np = state_np.astype(np.float32)
         return data_np
 
-    def fit_model(self):
-        history = self.lstm_ae.fit(self.X_train, self.X_train, epochs=50, validation_data=(self.X_valid, self.X_valid))
+    def fit_model(self, X_train, X_valid):
+        history = self.lstm_ae.fit(X_train, X_train, epochs=50, validation_data=(X_valid, X_valid))
 
-
-model = Model([1], [1]).make_model()

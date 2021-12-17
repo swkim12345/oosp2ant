@@ -63,7 +63,7 @@ class StockWorld():
 
         done = self.is_done()
 
-        return (self.time, self.market_feature, self.asset), reward, done
+        return self.time, self.market_feature, self.asset, done, reward
 
     def is_done(self):
         if self.time == self.destination:
@@ -71,28 +71,15 @@ class StockWorld():
         else:
             return False
 
-    def reset(self, time):
+    def reset(self, time, destination):
         self.time = time
+        self.destination = destination
+        return self.time, self.market_feature, self.asset , self.is_done()
         # 나머지 state 값들도 초기화 해야 됨
         
     def current_state(self):
         """
         현재 상태를 리턴한다.
         """
-        return self.time, self.market_feature, self.asset
+        return self.time, self.market_feature, self.asset , self.is_done()
 
-
-current_time = datetime.date(2018, 11, 10)
-
-test1 = StockWorld(current_time)
-test1.current_state()
-
-print(test1.step(-1))
-print(test1.step(1))
-print(test1.step(1))
-print(test1.step(0))
-print(test1.step(0))
-print(test1.step(0))
-print(test1.step(0))
-print(test1.step(0))
-print(test1.step(0))
