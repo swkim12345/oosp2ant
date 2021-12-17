@@ -22,13 +22,14 @@ class StockWorld():
         """
 
         self.data = stock_dataset("data.db").data_modification()  # 데이터 셋 초기화
+        self.kospi = stock_dataset("data.db").real_kospi()
         self.destination = datetime.date(2019, 1, 1)  # 에피소드 끝지점
         self.start = datetime.date(2000, 1, 1)  # data의 시작점
 
         self.time = time
         timediff = self.time - self.start
         self.market_feature = self.data[timediff.days-29:timediff.days+1]  # m, n 행렬로 표현한 시장지표
-        self.asset = [0, 1000]  # index 0 : 현금, index 1 : ETF 펀드 (kospi * 1000)
+        self.asset = [1000000000, 0]  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
 
     def step(self, action):
         """
@@ -39,23 +40,26 @@ class StockWorld():
         self.time = self.time + datetime.timedelta(days=1)
 
         timediff = self.time - self.start
+        kospi_diff = float((self.kospi[timediff.days] - self.kospi[timediff.days - 1]) / self.kospi[timediff.days - 1])
         self.market_feature = self.data[timediff.days-29:timediff.days+1]  # 시장지표 최신화
 
         current_asset = sum(self. asset)
 
         if action == 0:  # 현금일 경우 아무 것도 안함, ETF 펀드일 경우 가치 최신화
             if self.asset[1] != 0:
-                self.asset[1] = self.asset[1]  # 가치 최신화
+                self.asset[1] = self.asset[1] + self.asset[1] * kospi_diff # 가치 최신화
         elif action == -1:
-            if self.asset[1] != 0:  # ETF 펀드가 존재할 경우 현금으로 전환 수수료 계산 해주어야 됨
+            if self.asset[1] != 0:  # 현금일 경우 아무것도 안 함, ETF 펀드가 존재할 경우 현금으로 전환
                 self.asset[0] = self.asset[1]
                 self.asset[1] = 0
         elif action == 1:
-            if self.asset[0] != 0:  # 현금이 존재 할 경우 ETF 로 전환
-                self.asset[1] = self.asset[0]  # 가치가 최신화 된 ETF 임 수수료 계산 해주어야 됨
+            if self.asset[0] != 0:  # 현금이 존재 할 경우 ETF 로 전환, ETF 펀드가 존재 할 경우 가치 최신화
+                self.asset[1] = self.asset[0] + self.asset[0] * kospi_diff  # 가치가 최신화 된 ETF 임
                 self.asset[0] = 0
+            else:
+                self.asset[1] = self.asset[1] + self.asset[1] * kospi_diff # 가치 최신화
 
-        reward = (sum(self.asset) - current_asset) / current_asset
+        reward = ((sum(self.asset) - current_asset) / current_asset) * 100
 
         done = self.is_done()
 
@@ -85,6 +89,10 @@ test1.current_state()
 
 print(test1.step(-1))
 print(test1.step(1))
-
-while not test1.step(0)[2]:
-    print(test1.current_state())
+print(test1.step(1))
+print(test1.step(0))
+print(test1.step(0))
+print(test1.step(0))
+print(test1.step(0))
+print(test1.step(0))
+print(test1.step(0))
