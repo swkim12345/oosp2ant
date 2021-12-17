@@ -75,6 +75,7 @@ class StockAgent():
             target = np.array(target, dtype="float32").reshape(1, 3)
 
             q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=1)
+            print(max_q_prime, q_target.model.predict((input_s_prime1, input_s_prime2)), q.model.predict((input_s1, input_s2)))
 
 
 
