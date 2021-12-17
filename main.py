@@ -9,8 +9,8 @@ import numpy as np
 
 memory = ReplayBuffer()
 
-current_time = datetime.date(2018, 1, 1)
-destination = datetime.date(2019, 1, 1)
+current_time = datetime.date(2001, 1, 1)
+destination = datetime.date(2021, 11, 30)
 
 environment = StockWorld(current_time)
 agent = StockAgent()
@@ -24,6 +24,7 @@ s = [t, market_feature, asset]
 
 while not done:
     a = agent.select_action(s)
+    agent.eps -= 0.01
 
     t, market_feature, asset, done, r = environment.step(a)
     s_prime = [t, market_feature, asset]

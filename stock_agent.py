@@ -18,7 +18,7 @@ class StockAgent():
         self.q = Model()
         self.qnet = Model()
 
-        self.eps = 0.9
+        self.eps = 0.95
 
 
 
@@ -58,24 +58,24 @@ class StockAgent():
     def train(self, q, q_target, memory):
         for i in range(10):
             gamma = 0.98
-            s, a, r, s_prime, done_mask = memory.sample(1)
+            s, a, r, s_prime, done_mask = memory.sample(10)
 
-            input_s1 = np.array(s[0][1], dtype='float32')
-            input_s2 = np.array(s[0][2], dtype='float32')
+            input_s1 = np.array(s[i][1], dtype='float32')
+            input_s2 = np.array(s[i][2], dtype='float32')
             input_s1 = input_s1.reshape(1, 30, 4)
             input_s2 = input_s2.reshape(1, 2)
 
-            input_s_prime1 = np.array(s_prime[0][1], dtype='float32')
-            input_s_prime2 = np.array(s_prime[0][2], dtype='float32')
+            input_s_prime1 = np.array(s_prime[i][1], dtype='float32')
+            input_s_prime2 = np.array(s_prime[i][2], dtype='float32')
             input_s_prime1 = input_s_prime1.reshape(1, 30, 4)
             input_s_prime2 = input_s_prime2.reshape(1, 2)
 
             max_q_prime = max(q_target.model.predict((input_s_prime1, input_s_prime2)))
-            target = r + gamma * max_q_prime * done_mask
+            target = r[i] + gamma * max_q_prime * done_mask[i]
             target = np.array(target, dtype="float32").reshape(1, 3)
 
-            q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=1)
-            print(max_q_prime, q_target.model.predict((input_s_prime1, input_s_prime2)), q.model.predict((input_s1, input_s2)))
+            q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=5, verbose=2)
+
 
 
 

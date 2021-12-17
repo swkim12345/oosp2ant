@@ -6,7 +6,7 @@ import numpy as np
 class ReplayBuffer():
 
     def __init__(self):
-        self.buffer = collections.deque(maxlen = 100)
+        self.buffer = collections.deque(maxlen = 500)
 
     def put(self, transition):
         self.buffer.append(transition)

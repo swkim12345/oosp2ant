@@ -38,7 +38,7 @@ class StockWorld():
 
         #print(self.market_feature)
 
-        self.asset = np.array([1000, 0])  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
+        self.asset = np.array([100000000, 0])  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 1억)
 
     def step(self, action):
         """
