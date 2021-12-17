@@ -2,7 +2,13 @@ from keras.models import Sequential
 from keras.layers import Dense, LSTM
 import numpy as np
 
+class Model():
 
+	def __init__(self):
+		self.model = Sequential()  # 케라스 순차 모델 사용
+
+		self.model.add(LSTM(64, input_shape=(30, 4), activation='relu', return_sequences=True))
+		self.model.add(Dense(3))
 
 #0. 하이퍼 파라미터 설정하는 함수
 def set_hyperparameter():

@@ -1,6 +1,7 @@
 import sqlite3
 from typing import MutableMapping
 import numpy as np
+import datetime
 
 # 36526 ~ 44530까지의 시간을 가짐
 class stock_dataset():
@@ -110,8 +111,19 @@ class stock_dataset():
 		return tech_indi_np
 
 
-
 stock = stock_dataset()
 stock.init("data.db")
 
-print(stock.tech_indi())
+start = datetime.date(2000, 1, 1)
+
+data = list(stock.tech_indi())
+
+for i in range(len(data)):
+	data[i] = list(data[i])
+
+for i in range(len(data)):
+	data[i][0] = start
+	start += datetime.timedelta(days=1)
+
+print(data)
+

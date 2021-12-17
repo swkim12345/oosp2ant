@@ -19,7 +19,7 @@ class StockWorld():
         state 를 구현함
         :param time: 현재 시간
         """
-        self.destination = datetime.date(2019, 1, 1)
+        self.destination = datetime.date(2019, 1, 1)  # 에피소드 끝
         self.time = time
         self.market_feature = [[0 for _ in range(4)] for _ in range(30)]  # m, n 행렬로 표현한 시장지표
         self.asset = [0, 1000]  # index 0 : 현금, index 1 : ETF 펀드 (kospi * 1000)
