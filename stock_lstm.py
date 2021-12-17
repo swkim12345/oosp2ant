@@ -1,3 +1,4 @@
+import keras.layers
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, RepeatVector, TimeDistributed, Input, Concatenate
 import numpy as np
@@ -26,30 +27,37 @@ class Model():
 		self.lstm_encoder.summary()
 		self.lstm_decoder.summary()
 
+	def make_model(self):  # market feature 와, asset 을 받아 q value를 예측
+
+		wt_prime_inpt = keras.layers.Input(shape=[2])
+		inputs = [wt_prime_inpt]
+		encoders = []
+
+		# 거래할 ETF는 한개이므로
+		inpt = keras.layers.Input(shape=[30, 4])
+		inputs.append(inpt)
+		encoder = self.lstm_encoder(inpt)
+		encoders.append(encoder)
+		print(type(encoder))
+
+		wt_prime_concat_with_enc = keras.layers.Concatenate(axis=1)([wt_prime_inpt, encoder])
+
+		hidden1 = Dense(32, activation="relu")(wt_prime_concat_with_enc)
+		hidden2 = Dense(32, activation="relu")(hidden1)
+		output = Dense(3)(hidden2)  # output레이어
+
+		model = tf.keras.models.Model(inputs=[inputs], outputs=[output])
+		model.summary()
+
+		return model
 
 	def fit_model(self):
 		history = self.lstm_ae.fit(self.X_train, self.X_train, epochs=50, validation_data=(self.X_valid, self.X_valid))
 
 
+model = Model([1], [1]).make_model()
+print(model)
 
-model = Model([1], [1])
 
-wt_prime_inpt = Input(shape=[4])
-inputs = [wt_prime_inpt]
-encoders = []
 
-#거래할 ETF는 한개이므로
-inpt = Input(shape=[30, 4])
-inputs.append(inpt)
-encoder = model.lstm_encoder(inpt)
-encoders.append(encoder)
 
-enc_concat = Concatenate(axis=1)(encoders)
-wt_prime_concat_with_enc = Concatenate(axis=1)([wt_prime_inpt, enc_concat])
-
-hidden1 = Dense(64, activation="relu")(wt_prime_concat_with_enc)
-hidden2 = Dense(32, activation="relu")(hidden1)
-output = Dense(3)(hidden2) #output레이어
-
-model = tf.keras.models.Model(inputs=[inputs], outputs=[output])
-model.summary()
