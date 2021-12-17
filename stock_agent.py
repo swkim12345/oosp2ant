@@ -74,7 +74,8 @@ class StockAgent():
             target = r[i] + gamma * max_q_prime * done_mask[i]
             target = np.array(target, dtype="float32").reshape(1, 3)
 
-            q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=5, verbose=2)
+            history = q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=5, verbose=2)
+            return history
 
 
 

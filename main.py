@@ -9,7 +9,8 @@ import numpy as np
 
 memory = ReplayBuffer()
 
-current_time = datetime.date(2001, 1, 1)
+#시작 날짜를 받아 그 날짜부터 시작함.
+current_time = datetime.date(2021, 6, 1)
 destination = datetime.date(2021, 11, 30)
 
 environment = StockWorld(current_time)
@@ -21,10 +22,12 @@ state = environment.reset(current_time, destination)
 t, market_feature, asset, done = state
 s = [t, market_feature, asset]
 
+asset_list = []
+history_list = []
 
 while not done:
     a = agent.select_action(s)
-    agent.eps = max(0.1, agent.eps - 0.01)
+    agent.eps = max(0.1, agent.eps - 0.0001)
 
     t, market_feature, asset, done, r = environment.step(a)
     s_prime = [t, market_feature, asset]
@@ -41,14 +44,11 @@ while not done:
         break
 
     if memory.size() > 50:
-        agent.train(agent.q, agent.qnet, memory)
+        #loss에 대한 History를 받는 함수
+        history_list.append(np.mean(agent.train(agent.q, agent.qnet, memory).history['loss'][1:]))
+    asset_list.append(sum(asset))
+    #print(t, score, asset, a)
 
-    print(t, score, asset, a)
+from make_plotting import make_plotting
 
-
-
-
-
-
-
-
+make_plotting(history_list, asset_list, "hello")
