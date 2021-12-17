@@ -25,8 +25,10 @@ class StockAgent():
         """
 
         coin = random.random()
-        input_1 = np.array(state[2], float)
-        input_2 = np.array(state[1], float)
+        input_1 = state[2]
+        input_2 = state[1]
+
+        print(input_2, input_1)
 
         if coin < self.eps:  # epsilon - greedy
             random_action = random.randint(-1, 1)

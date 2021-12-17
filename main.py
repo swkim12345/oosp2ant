@@ -17,6 +17,8 @@ state = environment.reset(current_time, destination)
 t, market_feature, asset, done = state
 s = [t, market_feature, asset]
 
+
+
 while not done:
     a = agent.select_action(s)
 

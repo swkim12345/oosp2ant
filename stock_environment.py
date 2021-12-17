@@ -30,11 +30,11 @@ class StockWorld():
         self.time = time
         timediff = self.time - self.start
 
-        self.market_feature = []  # m, n 행렬로 표현한 시장지표
+        self.market_feature = np.array([])  # m, n 행렬로 표현한 시장지표
         for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
-            self.market_feature.append(self.data[feature][1:])
+            self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], float), axis=0)
 
-        self.asset = [1000000000, 0]  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
+        self.asset = np.array([1000000000, 0])  # index 0 : 현금, index 1 : ETF 펀드 (처음에 현금 10억)
 
     def step(self, action):
         """
@@ -46,9 +46,9 @@ class StockWorld():
 
         timediff = self.time - self.start
         kospi_diff = float((self.kospi[timediff.days] - self.kospi[timediff.days - 1]) / self.kospi[timediff.days - 1])
-        self.market_feature = []
+        self.market_feature = np.array([])
         for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
-            self.market_feature.append(self.data[feature][1:])
+            self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], float), axis = 0)
 
         current_asset = sum(self. asset)
 
@@ -98,5 +98,8 @@ class StockWorld():
         np_asset = np.array(self.asset, float)
         done = self.is_done()
         return self.time, np_market_feature, np_asset, done
+
+
+
 
 
