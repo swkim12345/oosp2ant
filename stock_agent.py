@@ -29,13 +29,10 @@ class StockAgent():
 
         coin = random.random()
         #input_1 : asset input_2 : market_feature
-        input_1 = np.array(state[2], dtype='float32')
-
-        input_2 = np.array(state[1], dtype='float32')
-        input_1 = input_1.reshape(1, 2)
-        input_2 = input_2.reshape(1, 30, 4)
-        input_1 = np.asarray_chkfinite(input_1)
-        input_2 = np.asarray_chkfinite(input_2)
+        input_1 = np.array(state[1], dtype='float32')
+        input_2 = np.array(state[2], dtype='float32')
+        input_1 = input_1.reshape(1, 30, 4)
+        input_2 = input_2.reshape(1, 2)
         # print("output")
         # print(input_2, input_1)
         # print(input_1.shape)
@@ -54,9 +51,30 @@ class StockAgent():
         else:
             # https://stackoverflow.com/questions/65408896/how-to-do-prediction-with-2-inputs
             # 해결방법
-            act_values = self.q.model.predict((input_2, input_1))
-            return np.argmax(act_values[0])
+            act_values = self.q.model.predict((input_1, input_2))
+            return np.argmax(act_values[0]) - 1
             # 높은 q value 를 가지는 action 을 택함.
+
+    def train(self, q, q_target, memory):
+        for i in range(10):
+            gamma = 0.98
+            s, a, r, s_prime, done_mask = memory.sample(1)
+
+            input_s1 = np.array(s[0][1], dtype='float32')
+            input_s2 = np.array(s[0][2], dtype='float32')
+            input_s1 = input_s1.reshape(1, 30, 4)
+            input_s2 = input_s2.reshape(1, 2)
+
+            input_s_prime1 = np.array(s_prime[0][1], dtype='float32')
+            input_s_prime2 = np.array(s_prime[0][2], dtype='float32')
+            input_s_prime1 = input_s_prime1.reshape(1, 30, 4)
+            input_s_prime2 = input_s_prime2.reshape(1, 2)
+
+            max_q_prime = max(q_target.model.predict((input_s_prime1, input_s_prime2)))
+            target = r + gamma * max_q_prime * done_mask
+            target = np.array(target, dtype="float32").reshape(1, 3)
+
+            q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=1)
 
 
 

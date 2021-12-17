@@ -30,7 +30,9 @@ while not done:
 
     done_mask = 0.0 if done else 1.0
 
-    memory.put(s, a, r, s_prime, done_mask)
+    transition = [s, a, r, s_prime, done_mask]
+
+    memory.put(transition)
     s = s_prime
     score += r
 
@@ -38,14 +40,9 @@ while not done:
         break
 
     if memory.size() > 50:
-        train(agent.q, agent.qnet, memory)
+        agent.train(agent.q, agent.qnet, memory)
 
-
-
-    #print(a)
-
-    if done:
-        break
+    print(t, score, asset, a)
 
 
 

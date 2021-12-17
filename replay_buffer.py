@@ -23,10 +23,8 @@ class ReplayBuffer():
             s_prime_list.append(s_prime)
             done_mask_list.append(done_mask)
 
-        s_list = np.array(s_list, float)
         a_list = np.array(a_list, float)
         r_list = np.array(r_list, float)
-        s_prime_list = np.array(s_prime_list, float)
         done_mask_list = np.array(done_mask_list, float)
 
         return s_list, a_list, r_list, s_prime_list, done_mask_list

@@ -51,7 +51,7 @@ class StockWorld():
         timediff = self.time - self.start
         kospi_diff = float((self.kospi[timediff.days] - self.kospi[timediff.days - 1]) / self.kospi[timediff.days - 1])
         self.market_feature = np.array(self.data[timediff.days-29][1:], dtype=float)
-        for feature in range(timediff.days-29, timediff.days+1):  # 시장지표 최신화
+        for feature in range(timediff.days-28, timediff.days+1):  # 시장지표 최신화
             self.market_feature = np.append(self.market_feature, np.array(self.data[feature][1:], dtype=float)).reshape(-1, 4)
 
         current_asset = sum(self. asset)
