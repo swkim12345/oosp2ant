@@ -1,4 +1,5 @@
 import datetime
+from stock_dataset import stock_dataset
 
 
 class StockWorld():
@@ -19,9 +20,14 @@ class StockWorld():
         state 를 구현함
         :param time: 현재 시간
         """
-        self.destination = datetime.date(2019, 1, 1)  # 에피소드 끝
+
+        self.data = stock_dataset("data.db").data_modification()  # 데이터 셋 초기화
+        self.destination = datetime.date(2019, 1, 1)  # 에피소드 끝지점
+        self.start = datetime.date(2000, 1, 1)  # data의 시작점
+
         self.time = time
-        self.market_feature = [[0 for _ in range(4)] for _ in range(30)]  # m, n 행렬로 표현한 시장지표
+        timediff = self.time - self.start
+        self.market_feature = self.data[timediff.days-29:timediff.days+1]  # m, n 행렬로 표현한 시장지표
         self.asset = [0, 1000]  # index 0 : 현금, index 1 : ETF 펀드 (kospi * 1000)
 
     def step(self, action):
@@ -32,7 +38,8 @@ class StockWorld():
 
         self.time = self.time + datetime.timedelta(days=1)
 
-        # market feature 다음 시간의 market feature 로 데이타 베이스에서 받아 최신화 시켜야 됨
+        timediff = self.time - self.start
+        self.market_feature = self.data[timediff.days-29:timediff.days+1]  # 시장지표 최신화
 
         current_asset = sum(self. asset)
 

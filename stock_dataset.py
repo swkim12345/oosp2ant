@@ -14,7 +14,7 @@ class stock_dataset():
 	B = 1000000000
 
 	#filename을 받아 데이터베이스를 열게 됨.
-	def init(self, filename):
+	def __init__(self, filename):
 		self.filename = filename
 
 
@@ -110,22 +110,20 @@ class stock_dataset():
 
 		return tech_indi_np
 
+	def data_modification(self):  # tech_indi 에서 날짜를 datetime 형식으로 바꿈
+		start = datetime.date(2000, 1, 1)
 
-stock = stock_dataset()
-stock.init("data.db")
+		stock_data = self.tech_indi()
 
-start = datetime.date(2000, 1, 1)
+		list_data = list(stock_data)
 
-data = stock.tech_indi()
+		for i in range(len(list_data)):
+			list_data[i] = list(list_data[i])
 
-list_data = list(data)
+		for i in range(len(list_data)):
+			list_data[i][0] = start
+			start += datetime.timedelta(days=1)
 
-for i in range(len(list_data)):
-	list_data[i] = list(list_data[i])
+		return list_data
 
-for i in range(len(list_data)):
-	list_data[i][0] = start
-	start += datetime.timedelta(days=1)
 
-print(list_data)
-print(data)
