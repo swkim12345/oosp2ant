@@ -24,7 +24,7 @@ s = [t, market_feature, asset]
 
 while not done:
     a = agent.select_action(s)
-    agent.eps -= 0.01
+    agent.eps = max(0.1, agent.eps - 0.01)
 
     t, market_feature, asset, done, r = environment.step(a)
     s_prime = [t, market_feature, asset]
