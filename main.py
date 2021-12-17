@@ -15,19 +15,6 @@ destination = datetime.date(2019, 1, 1)
 environment = StockWorld(current_time)
 agent = StockAgent()
 
-# encoder 학습
-model = Model()
-dataset = stock_dataset("data.db")
-set = dataset.tech_indi()[25:]
-set = np.delete(set, 0, axis=1).reshape(-1, 30, 4)
-print(type(set))
-print(set[0])
-print(set.shape)
-print(set)
-
-model.fit_model(set[:200], set[200:])
-
-
 r = 0
 score = 0
 state = environment.reset(current_time, destination)
@@ -37,7 +24,23 @@ s = [t, market_feature, asset]
 
 while not done:
     a = agent.select_action(s)
-    print(a)
+
+    t, market_feature, asset, done, r = environment.step(a)
+    s_prime = [t, market_feature, asset]
+
+    done_mask = 0.0 if done else 1.0
+
+    memory.put(s, a, r, s_prime, done_mask)
+    s = s_prime
+    score += r
+
+    if done:
+        break
+
+    if memory.size() > 50:
+        train(agent.q, agent.qnet, memory)
+
+
 
     #print(a)
 

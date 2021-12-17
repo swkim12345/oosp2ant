@@ -32,12 +32,10 @@ class StockAgent():
         input_1 = np.array(state[2], dtype='float32')
 
         input_2 = np.array(state[1], dtype='float32')
-        # print("input_1")
-        # print(input_1)
-        # input_1 = input_1.reshape(1, 2)
-        # input_2 = input_2.reshape(1, 30, 4)
-        # input_1 = np.asarray_chkfinite(input_1)
-        # input_2 = np.asarray_chkfinite(input_2)
+        input_1 = input_1.reshape(1, 2)
+        input_2 = input_2.reshape(1, 30, 4)
+        input_1 = np.asarray_chkfinite(input_1)
+        input_2 = np.asarray_chkfinite(input_2)
         # print("output")
         # print(input_2, input_1)
         # print(input_1.shape)
@@ -56,7 +54,7 @@ class StockAgent():
         else:
             # https://stackoverflow.com/questions/65408896/how-to-do-prediction-with-2-inputs
             # 해결방법
-            act_values = self.q.lstm_ae.predict((input_1, input_2), verbose=1)
+            act_values = self.q.model.predict((input_2, input_1))
             return np.argmax(act_values[0])
             # 높은 q value 를 가지는 action 을 택함.
 
