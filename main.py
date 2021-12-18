@@ -10,7 +10,7 @@ import numpy as np
 memory = ReplayBuffer()
 
 #시작 날짜를 받아 그 날짜부터 시작함.
-current_time = datetime.date(2001, 1, 1)
+current_time = datetime.date(2015, 6, 1)
 destination = datetime.date(2021, 11, 30)
 
 environment = StockWorld(current_time)
@@ -47,7 +47,7 @@ while not done:
         #loss에 대한 History를 받는 함수
         history_list.append(np.mean(agent.train(agent.q, agent.qnet, memory).history['loss'][1:]))
     asset_list.append(sum(asset))
-    #print(t, score, asset, a)
+    print(t, score, asset, a)
 
 from make_plotting import make_plotting
 
