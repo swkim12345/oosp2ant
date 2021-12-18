@@ -12,6 +12,8 @@ memory = ReplayBuffer()
 #시작 날짜를 받아 그 날짜부터 시작함.
 current_time = datetime.date(2001, 1, 1)
 destination = datetime.date(2021, 11, 30)
+q_update_days = 30
+
 
 environment = StockWorld(current_time)
 agent = StockAgent()
@@ -51,7 +53,7 @@ while not done:
     r_list.append(r)
     print(t, r, score, asset, a)
 
-    if (t-current_time).days % 30 == 0:
+    if (t-current_time).days % q_update_days == 0:
         print("parameter updated")
         agent.qnet.model.set_weights(agent.q.model.get_weights())
 
