@@ -57,7 +57,7 @@ class StockAgent():
 
     def train(self, q, q_target, memory):
         for i in range(10):
-            gamma = 0.98
+            gamma = 0.9
             s, a, r, s_prime, done_mask = memory.sample(10)
 
             input_s1 = np.array(s[i][1], dtype='float32')
@@ -70,12 +70,15 @@ class StockAgent():
             input_s_prime1 = input_s_prime1.reshape(1, 30, 4)
             input_s_prime2 = input_s_prime2.reshape(1, 2)
 
-            max_q_prime = max(q_target.model.predict((input_s_prime1, input_s_prime2)))
+            max_q_prime = np.amax(q_target.model.predict((input_s_prime1, input_s_prime2))[0])
             target = r[i] + gamma * max_q_prime * done_mask[i]
-            target = np.array(target, dtype="float32").reshape(1, 3)
+            target_f = q.model.predict([input_s1, input_s2])
+            action = int(a[i] + 1)
 
-            history = q_target.model.fit([input_s1, input_s2], target, batch_size=1, epochs=5, verbose=2)
-            return history
+            target_f[0][action] = target
+
+            history = q.model.fit([input_s1, input_s2], target_f, epochs=1, verbose=2)
+        return history
 
 
 

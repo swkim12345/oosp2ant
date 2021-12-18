@@ -6,10 +6,10 @@ import tensorflow as tf
 from tensorflow.python.eager.def_function import RUN_FUNCTIONS_EAGERLY, run_functions_eagerly
 from keras.utils.all_utils import plot_model
 
-class Model():
+
+class Model:
 
     def __init__(self):
-
         input_1 = Input(shape=(30, 4), name='input_1')
         input_2 = Input(shape=(2), name='input_2')
 
@@ -22,7 +22,6 @@ class Model():
         hidden2_DNN = Dense(32)(hidden1_DNN)
         output = Dense(3)(hidden2_DNN)
 
-        self.model = keras.Model(inputs=[input_1, input_2], outputs = [output])
+        self.model = keras.Model(inputs=[input_1, input_2], outputs=[output])
         self.model.compile(optimizer='adam', loss='mse')
         self.model.summary()
-

@@ -47,7 +47,11 @@ while not done:
         #loss에 대한 History를 받는 함수
         history_list.append(np.mean(agent.train(agent.q, agent.qnet, memory).history['loss'][1:]))
     asset_list.append(sum(asset))
-    print(t, score, asset, a)
+    print(t, r, score, asset, a)
+
+    if (t-current_time).days % 30 == 0:
+        print("parameter updated")
+        agent.qnet.model.set_weights(agent.q.model.get_weights())
 
 from make_plotting import make_plotting
 
