@@ -10,7 +10,7 @@ import numpy as np
 memory = ReplayBuffer()
 
 #시작 날짜를 받아 그 날짜부터 시작함.
-current_time = datetime.date(2021, 6, 1)
+current_time = datetime.date(2001, 1, 1)
 destination = datetime.date(2021, 11, 30)
 
 environment = StockWorld(current_time)
