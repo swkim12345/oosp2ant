@@ -10,7 +10,7 @@ import numpy as np
 memory = ReplayBuffer()
 
 #시작 날짜를 받아 그 날짜부터 시작함.
-current_time = datetime.date(2015, 6, 1)
+current_time = datetime.date(2001, 1, 1)
 destination = datetime.date(2021, 11, 30)
 
 environment = StockWorld(current_time)
@@ -24,6 +24,7 @@ s = [t, market_feature, asset]
 
 asset_list = []
 history_list = []
+r_list = []
 
 while not done:
     a = agent.select_action(s)
@@ -45,8 +46,9 @@ while not done:
 
     if memory.size() > 50:
         #loss에 대한 History를 받는 함수
-        history_list.append(np.mean(agent.train(agent.q, agent.qnet, memory).history['loss'][1:]))
+        history_list.append(np.mean(agent.train(agent.q, agent.qnet, memory)))
     asset_list.append(sum(asset))
+    r_list.append(r)
     print(t, r, score, asset, a)
 
     if (t-current_time).days % 30 == 0:
@@ -54,5 +56,6 @@ while not done:
         agent.qnet.model.set_weights(agent.q.model.get_weights())
 
 from make_plotting import make_plotting
+print(history_list)
 
-make_plotting(history_list, asset_list, "hello")
+make_plotting(history_list, asset_list, r_list, "hello")

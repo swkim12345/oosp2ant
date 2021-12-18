@@ -56,6 +56,7 @@ class StockAgent():
             # 높은 q value 를 가지는 action 을 택함.
 
     def train(self, q, q_target, memory):
+        history_list = []
         for i in range(10):
             gamma = 0.9
             s, a, r, s_prime, done_mask = memory.sample(10)
@@ -78,7 +79,9 @@ class StockAgent():
             target_f[0][action] = target
 
             history = q.model.fit([input_s1, input_s2], target_f, epochs=1, verbose=2)
-        return history
+            history_list.append(history.history['loss'])
+            # print(history_list)
+        return history_list
 
 
 
