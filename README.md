@@ -1,29 +1,34 @@
-# README #
+# ANT
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## DQN을 이용한 Kospi 주가 예측 프로그램
 
-### What is this repository for? ###
+### 사용 환경 (Recommand)
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+> Python 3.6+ <br>
+> tensorflow 2.6.0+
 
-### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+### 사용 방법
+```shell
+$ git clone https://ossp2ant-admin@bitbucket.org/ossp2ant/ant.git
+$ python main.py  # if python == 3.6+
+$ python3 main.py
+```
 
-### Contribution guidelines ###
+### parameter 수정 방법
 
-* Writing tests
-* Code review
-* Other guidelines
+```shell
+$ vi main.py
+$ # if you want to modify start and end day
+$ # modify current_time, destination
+$
+$ # if yout want to modify updating target network
+$ # modify q_update_days
+```
 
-### Who do I talk to? ###
+### 제작자
 
-* Repo owner or admin
-* Other community or team contact
+|학과| 학번 | 이름 | 이메일 |
+|---|-----|-----|-----|
+| 컴퓨터공학부 | 201911243 | 김성환| swkim12345@naver.com |
+| 기계공학과 | 201610747 |유창재 | dondegi5@gmail.com |
