@@ -2,6 +2,11 @@
 
 ## DQN을 이용한 Kospi 주가 예측 프로그램
 
+## Release
+
+> 1.0.0
+> branch name : release/1.0.0
+
 ### 사용 환경 (Recommand)
 
 > Python 3.6+ <br>
